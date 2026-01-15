@@ -43,7 +43,7 @@ router.get("/sign-out", (req, res) => {
 
 
 router.post("/sign-up", async (req, res) => {
-    const userInDB = await User.findOne({ username: req.body.username })
+    const userInDB = await User.findOne({ username: req.body.username }).select("+password");
     if (userInDB) {
         return res.send(`A user with username ${req.body.username} already exists`)
     }
@@ -55,7 +55,15 @@ router.post("/sign-up", async (req, res) => {
     req.body.password = hashedPassword
     const newUser = await User.create(req.body)
 
-    res.send(newUser)
+    req.session.user = {
+        username: newUser.username,
+        _id: newUser._id,
+    }
+
+    req.session.message = `Welcome to Open House ${newUser.username}`
+    req.session.save(() => {
+        res.redirect("/listings")
+    })
 })
 
 

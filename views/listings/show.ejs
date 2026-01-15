@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= listing.owner.username %>'s listing
+    </title>
+</head>
+
+<body>
+    <%- include("../partials/_navbar.ejs") %>
+        <h1>A listing in <%= listing.city %>
+        </h1>
+
+        <h2>Details</h2>
+        <p>House Size: <%= listing.size %>
+        </p>
+        <p>Price: $<%= listing.price %>
+        </p>
+        <p>Street Address: <%= listing.streetAddress %>
+        </p>
+
+        <h2>Owner</h2>
+        <% if (listing.owner._id.equals(user._id)) { %>
+            <p>You own this property</p>
+            <a href="/listings/<%= listing._id %>/edit">Edit this property</a>
+            <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+                <button type="submit">Delete this property</button>
+            </form>
+            <% } else { %>
+                <p>
+                    <%= listing.owner.username %> owns this property
+                </p>
+                <% } %>
+
+
+</body>
+
+</html>
